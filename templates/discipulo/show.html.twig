@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UEFEM Usuarios{% endblock %}
+
+{% block body %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <button type="button" id="sidebarCollapse" class="btn btn-dark mr-2">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="#">
+           <img src="../{{ appLogo }}" alt="Logo" style="height:45px !important">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-user-circle mr-1"></i> Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-cog mr-1"></i> Configuración</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt mr-1"></i> Salir</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+    {% include 'navigation_admin.html.twig' %}
+    <!-- Contenido Principal -->
+    <div id="content" style="padding:5px !important"> 
+        <p>&nbsp;</p>   
+        <div class='card col-12 col-md-63 col-lg-6 shadow p-3 mb-5 bg-white rounded' style='margin:auto !important'>
+            <div class='card-header'>
+                <p class='text-center'><a href="{{ path('app_discipulo_index') }}" title='Regresar al listado de Discipulos'><i class="far fa-list-alt" style="font-size:24px"></i></a></p>
+                <h3>Detalles del Discipulo</h3>
+            </div>
+            <div class='card-body'>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ discipulo.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Cedula</th>
+                            <td>{{ discipulo.cedula }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ discipulo.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Apellido</th>
+                            <td>{{ discipulo.apellido }}</td>
+                        </tr>                        
+                        <tr>
+                            <th>Fecha_nac</th>
+                            <td>{{ discipulo.fechaNac ? discipulo.fechaNac|date('d/m/Y') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Sexo</th>
+                            <td>
+                                {% if discipulo.sexo == '1' %}
+                                    Hombre
+                                {% elseif discipulo.sexo == '0' %}
+                                    Mujer
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ discipulo.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Telefono</th>
+                            <td>{{ discipulo.telefono }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dirección</th>
+                            <td>{{ discipulo.direccion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Instrucción</th>
+                            <td>{{ discipulo.instruccion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tiempo Asistencia</th>
+                            <td>{{ discipulo.tiempoAsistencia }}</td>
+                        </tr>   
+                        <tr>
+                            <th>Fecha Registro</th>
+                            <td>{{ discipulo.fechaRegistro ? discipulo.fechaRegistro|date('d/m/Y') : '' }}</td>
+                        </tr>   
+                        <tr>
+                            <th>Observación</th>
+                            <td>{{ discipulo.observacion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estado</th>
+                            <td>
+                                {% if discipulo.estado == '1' %}
+                                    <span class='badge badge-success'>Activo</span>
+                                {% else %}
+                                    <span class='badge badge-danger'>Inactivo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
+                <div class=' text-right col-12 col-md-12 col-lg-12'>
+                    <input type='button' class='btn btn-primary' value='Editar' onclick="document.location='{{ path('app_discipulo_edit', {'id': discipulo.id}) }}'">
+                </div>               
+            </div>
+        </div>
+        
+
+   </div>
+    <script>
+        $(document).ready(function() {
+            // Colapsar/Expandir Sidebar
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('active');
+            });
+            
+            // Hacer que los items del sidebar sean activos al hacer clic
+            $('.sidebar-item').on('click', function() {
+                $('.sidebar-item').removeClass('active');
+                $(this).addClass('active');
+            });
+        });        
+    </script>
+{% endblock %}
+

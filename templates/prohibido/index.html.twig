@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!
+{% endblock %}
+
+{% block body %}
+	<div class="fondo-log">
+		<div class="container-fluid">
+			<div class="row centrado">
+				<div class="col-12 col-md-12 col-lg-12">
+					<div class="card login_card rounded-3">
+						<div class="card-header">
+							<img class='img-fluid' src="assets/images/logo.jpg" width='200px'>
+							<h3>Atención</h3>
+						</div>
+						<div class="card-body">
+							<p class='text-danger'>El acceso a esta área del sistema no está permitido</p>
+                            <p class='text-center'><input type='button' class='btn-primary' value='Entrar al Sistema' onclick="document.location='/'"></p>
+						</div>
+					</div>
+				</div>
+            </div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.titulo) }}
+        {{ form_widget(form.titulo, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.titulo) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.sinopsis) }}
+        {# Aseguramos que el textarea preserve el data-controller="editor" definido en la clase de formulario #}
+        {{ form_widget(form.sinopsis, {'attr': form.sinopsis.vars.attr|merge({'class':'form-control'}) }) }}
+        {{ form_errors(form.sinopsis) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.orden) }}
+        {{ form_widget(form.orden, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.orden) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.modulo) }}
+        {{ form_widget(form.modulo, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.modulo) }}
+    </div>
+
+    {{ form_rest(form) }}
+
+    <div class='text-right'>
+        <button class="btn btn-primary">Salvar</button>
+    </div>
+{{ form_end(form) }}

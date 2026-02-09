@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Usuarios - Maranatha Discipulado{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            // Colapsar/Expandir Sidebar
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('active');
+            });
+            
+            // Hacer que los items del sidebar sean activos al hacer clic
+            $('.sidebar-item').on('click', function() {
+                $('.sidebar-item').removeClass('active');
+                $(this).addClass('active');
+            });
+        });   
+        
+        function search() {
+            var input = document.getElementById('searchInput').value;
+            window.location.href = '/user?page=1&limit=10&searchInput=' + input;
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <button type="button" id="sidebarCollapse" class="btn btn-dark mr-2">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="#">
+           <img src="{{ appLogo }}" alt="Logo" style="height:45px !important">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-user-circle mr-1"></i> Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-cog mr-1"></i> Configuración</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt mr-1"></i> Salir</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+    {% include 'navigation_admin.html.twig' %}
+    <!-- Contenido Principal -->
+    <div id="content" style=" padding:5px !important">    
+        <p>&nbsp;</p>
+        <h1>Usuarios en el Sistema</h1>
+        <p>&nbsp;</p>
+        <div class='row'>
+            <div class='col-12 col-md-8 col-lg-8 mb-0' style='margin:auto !important'>
+                <div class="navigation">
+                    {{ knp_pagination_render(users) }}
+                </div>              
+            </div>
+            <div class='col-12 col-md-4 col-lg-4 text-left mb-0'>
+                <div class="input-group">
+                    <input type="text" class="form-control" id='searchInput' name='searchInput' placeholder="Buscar Cedula Nombre o Apellido" aria-label="Buscar" aria-describedby="basic-addon2" value='{{ searchInput  }}'>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" onclick='javascript:search()'>Buscar</button>
+                    </div>
+                </div>                
+            </div>
+        </div>        
+        <div class="my-3 text-center"> {# Un div para agrupar y dar un poco de margen #}
+            <a href="{{ path('app_user_new') }}" title='Agregar un usuario nuevo al sistema' class="btn btn-primary btn-lg rounded-lg">
+                <i class="fa fa-plus-square" style='font-size: 24px;'></i> {# Ajusté el tamaño para que se vea mejor en un botón #}
+                Agregar Usuario
+            </a>
+        </div>         
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Nivel</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% set i = 1 %}
+            {% for user in users %}
+                <tr style="font-size:0.75rem !important">
+                    <td class='text-center'>{{ i }}</td>
+                    <td>{{ user.nombre }}</td>
+                    <td>{{ user.email }}</td>
+                    <td class='text-left'>
+                        {% if user.nivel == 99 %}
+                            Administrador
+                        {% elseif user.nivel == 50 %}
+                            Usuario
+                        {% else %}
+                            Representante
+                        {% endif %}
+                    </td>
+                    <td class='text-center'>
+                        {% if (user.estado == 1) %} 
+                            <span class='text-success'>Activo</span>
+                        {% else %}
+                            <span class='text-danger'>Inactivo</span>
+                        {% endif%}
+                    </td>
+                    <td class='text-center'>
+                        <a href="{{ path('app_user_show', {'id': user.id}) }}" title='Mostrar Detalles'><i class="fa-solid fa-eye"></i></a>
+                        <a href="{{ path('app_user_edit', {'id': user.id}) }}" title='Editar Usuario'><i class="fa-solid fa-user-pen"></i></a>
+                    </td>
+                </tr>
+                {% set i= i + 1 %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-danger">No se han usuarios en el sistema</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planificación - Maranatha Discipulado{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            // Colapsar/Expandir Sidebar
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('active');
+            });
+            
+            // Hacer que los items del sidebar sean activos al hacer clic
+            $('.sidebar-item').on('click', function() {
+                $('.sidebar-item').removeClass('active');
+                $(this).addClass('active');
+            });
+        });   
+        
+        function search() {
+            var input = document.getElementById('searchInput').value;
+            window.location.href = '/planificacion?page=1&limit=10&searchInput=' + input;
+        }
+
+
+        function verAsignados(planificacionId) {
+            alert ("aqui");
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <button type="button" id="sidebarCollapse" class="btn btn-dark mr-2">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="#">
+           <img src="{{ appLogo }}" alt="Logo" style="height:45px !important">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-user-circle mr-1"></i> Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-cog mr-1"></i> Configuración</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt mr-1"></i> Salir</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+    {% include 'navigation_admin.html.twig' %}
+    <!-- Contenido Principal -->
+    <div id="content" style=" padding:5px !important">    
+        <p>&nbsp;</p>
+        <h1>Planificación en el Sistema</h1>
+        <p>&nbsp;</p>
+        <div class='row'>
+            <div class='col-12 col-md-8 col-lg-8 mb-0' style='margin:auto !important'>
+                <div class="navigation">
+                    {{ knp_pagination_render(planificacions) }}
+                </div>              
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-12 col-md-4 col-lg-4  mb-0'>
+                <div class="input-group">
+                    <label for='fechaInicio'>Fecha Inicio:</label>
+                    <input type="date" class="form-control form-control-sm" id='fechaInicio' name='fechaInicio'>
+
+                </div>  
+            </div>
+            <div class='col-12 col-md-4 col-lg-4  mb-0'>                
+                <div class="input-group">
+                    <label for='fechaFin'>Fecha Fin:</label>
+                    <input type="date" class="form-control form-control-sm" id='fechaFin' name='fechaFin' >
+
+                </div>      
+            </div>
+            <div class='col-12 col-md-4 col-lg-4  mb-0'>                
+                <div class="input-group">
+                    <label for='leccion'>Lección:</label>
+                    <select class="form-control form-control-sm" id='leccion' name='leccion' >
+                        <option value='-99'>Cualquiera</option>
+                        {% for leccion in lecciones %}
+                            <option value='{{ leccion.id }}'>{{ leccion.titulo }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>      
+            </div>         
+        </div>
+        <div class='row'>       
+            <div class='col-12 col-md-12 col-lg-12 mb-0'>                           
+                <div class="input-group">
+                    <input type="text" class="form-control" id='searchInput' name='searchInput' placeholder="Buscar por Lección, Discipulador o Planificador" aria-label="Buscar" aria-describedby="basic-addon2" value='{{ searchInput  }}'>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" onclick='javascript:search()'>Buscar</button>
+                    </div>
+                </div>                
+            </div>
+        </div>   
+        <div class='row'>
+            <div class='col-12 col-md-12 col-lg-12 mb-0' style='margin:auto !important'>
+                <div class="my-3 text-center"> {# Un div para agrupar y dar un poco de margen #}
+                    <a href="{{ path('app_planificacion_new') }}" title='Agregar una planificación nueva al sistema' class="btn btn-primary btn-lg rounded-lg">
+                        <i class="fa fa-plus-square" style='font-size: 24px;'></i> {# Ajusté el tamaño para que se vea mejor en un botón #}
+                        Agregar Planificación
+                    </a>
+                </div>         
+                <table class="table table-striped" style="font-size: 10px !important">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Fecha</th>
+                            <th>Lección</th>
+                            <th>Aula</th>
+                            <th>Discipulador</th>
+                            <th>Estado</th>
+                            <th>Observacion</th>
+                            <th>Discipulos Asignados</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% set i = 1 %}
+                    {% for planificacion in planificacions %}
+                        <tr>
+                            <td class='text-center'>{{ i }}</td>
+                            <td class='text-center'>{{ planificacion.fecha ? planificacion.fecha|date('d/m/Y') : '' }}</td>
+                            <td class='text-left'>{{ planificacion.leccion }}</td>
+                            <td class='text-left'>{{ planificacion.aula }}</td>
+                            <td>{{ planificacion.discipulador }}</td>
+                            <td>
+                                {% if planificacion.estado == '1' %}
+                                    <span class='badge badge-success'>Activo</span>
+                                {% else %}
+                                    <span class='badge badge-danger'>Inactivo</span>
+                                {% endif %}                        
+                            
+                            </td>
+                            <td class='text-left'>{{ planificacion.observacion }}</td>
+                            <td class='text-center'>
+                                <a href="javascript:verAsignados('{{ planificacion.id }}')">{{ planificacion.discipulosAsignados }}</a>
+                            </td>
+                            <td class='text-center'>
+                                <a href="{{ path('app_planificacion_show', {'id': planificacion.id}) }}"><i class="fa-solid fa-eye"></i></a>
+                                <a href="{{ path('app_planificacion_edit', {'id': planificacion.id}) }}"><i class="fa-solid fa-user-pen"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="10" class="text-danger">No se han encontrado planificaciones en el sistema</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>            
+            </div>
+                
+        </div>
+
+
+    </div>
+{% endblock %}

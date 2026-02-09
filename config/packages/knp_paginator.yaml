@@ -1,0 +1,33 @@
+knp_paginator:
+
+  # Rango de páginas que se muestran en el control de paginación.
+  # El valor por defecto es 5. Cámbialo a 10.
+  page_range: 10
+
+
+  # Opciones por defecto para el paginador.
+  default_options:
+      # Nombre del parámetro de la URL para la página actual.
+      # El valor por defecto es 'page'.
+      page_name: 'page'
+
+      # Nombre del parámetro de la URL para el campo de ordenación (sorting).
+      # El valor por defecto es 'sort'.
+      sort_field_name: 'sort'
+
+      # Nombre del parámetro de la URL para la dirección de ordenación.
+      # El valor por defecto es 'direction'.
+      sort_direction_name: 'direction'
+
+      # Límite de ítems por página por defecto, si no se especifica en el controlador.
+      # El valor por defecto es 10.
+      default_limit: 50
+
+      # Si se deben obtener resultados distintos (usando 'DISTINCT').
+      # Útil para evitar duplicados en consultas complejas.
+      # El valor por defecto es true.
+      distinct: true    
+   
+  
+  template:
+        pagination: '@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig'
