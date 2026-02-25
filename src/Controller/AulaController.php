@@ -24,10 +24,10 @@ final class AulaController extends AbstractController
         PaginatorInterface $paginator,
         AulaRepository $aulaRepository): Response
     {
-      $appLogo=$this->getParameter('appLogo');
+        $appLogo=$this->getParameter('appLogo');
 
         $page=$request->query->getInt('page', 1);
-        $limit=$request->query->getInt('limit', 10);
+        $limit=$request->query->getInt('limit', 20);
         
         $searchInput=$request->query->get('searchInput', "");
 

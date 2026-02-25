@@ -18,8 +18,28 @@
         });   
         
         function search() {
+            var orden = document.getElementById('Orden').value;
+            var limit = document.getElementById('limit').value;            
             var input = document.getElementById('searchInput').value;
-            window.location.href = '/discipulo?page=1&limit=10&searchInput=' + input;
+            window.location.href = '/discipulo?page=1&limit=' + limit + '&searchInput=' + input + '&Orden=' + orden;
+        }
+
+        function Ordenar() {
+            var orden = document.getElementById('Orden').value;
+            var limit = document.getElementById('limit').value;
+            if (orden != '-99') {
+                var searchInput = document.getElementById('searchInput').value; // Obtener el valor de búsqueda actual
+                window.location.href = '/discipulo?page=1&limit=' + limit + '&searchInput=' + searchInput + '&Orden=' + orden; // Incluir el criterio de ordenación en la URL
+            } else {
+                alert('Por favor, seleccione un criterio de ordenación válido.');
+            }
+        }
+
+        function changeLimit() {
+            var limit = document.getElementById('limit').value;
+            var searchInput = document.getElementById('searchInput').value; // Obtener el valor de búsqueda actual
+            var orden = document.getElementById('Orden').value; // Obtener el valor de ordenación actual
+            window.location.href = '/discipulo?page=1&limit=' + limit + '&searchInput=' + searchInput + '&Orden=' + orden; // Incluir el criterio de ordenación en la URL
         }
     </script>
 {% endblock %}
@@ -46,7 +66,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt mr-1"></i> Salir</a>
                 </li>
-            </ul>
+            </ul>changeLimit()
         </div>
     </nav>
     <!-- Sidebar -->
@@ -100,6 +120,49 @@
                 </div>                
             </div>
         </div>        
+        <div class='row'>
+            <div class='col-12 col-md-6 col-lg-8 mb-6' style='margin:auto !important'>
+                <div class="input-group">
+                    {% if Orden %}
+                    <select id="Orden" class="form-control" onchange="javascript:sort()">
+                        <option value="-99">Seleccionar</option>
+                        <option value="cedula_asc" {% if Orden == 'cedula_asc' %}selected{% endif %}>Cedula Ascendente</option>
+                        <option value="cedula_desc" {% if Orden == 'cedula_desc' %}selected{% endif %}>Cedula Descendente</option>
+                        <option value="nombre_asc" {% if Orden == 'nombre_asc' %}selected{% endif %}>Nombre Ascendente</option>
+                        <option value="nombre_desc" {% if Orden == 'nombre_desc' %}selected{% endif %}>Nombre Descendente</option>
+                        <option value="fechaNac_asc" {% if Orden == 'fechaNac_asc' %}selected{% endif %}>Fecha Nacimiento Ascendente</option>
+                        <option value="fechaNac_desc" {% if Orden == 'fechaNac_desc' %}selected{% endif %}>Fecha Nacimiento Descendente</option>
+                    </select>
+                    {% else %}
+                        <select id="Orden" class="form-control" onchange="javascript:sort()">
+                            <option value="-99">Seleccionar</option>
+                            <option value="cedula_asc" >Cedula Ascendente</option>
+                            <option value="cedula_desc" >Cedula Descendente</option>
+                            <option value="nombre_asc" >Nombre Ascendente</option>
+                            <option value="nombre_desc">Nombre Descendente</option>
+                            <option value="fechaNac_asc">Fecha Nacimiento Ascendente</option>
+                            <option value="fechaNac_desc" >Fecha Nacimiento Descendente</option>
+                        </select>
+                    {% endif %}
+                    <div class="input-group-append">
+                        <button class="btn btn-success" type="button" onclick='javascript:Ordenar()'>Ordenar</button>
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-4 mb-6' style='margin:auto !important'>
+                 <div class="input-group">
+                    <select id="limit" class="form-control">
+                        <option value="25" {% if limit == 25 %}selected{% endif %}>25 por página</option>
+                        <option value="50" {% if limit == 50 %}selected{% endif %}>50 por página</option>
+                        <option value="75" {% if limit == 75 %}selected{% endif %}>75 por página</option>
+                        <option value="100" {% if limit == 100 %}selected{% endif %}>100 por página</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button" onclick='javascript:changeLimit()'>Cambiar Límite</button>
+                    </div>                   
+                 </div>
+            </div>
+        </div>              
         <div class="my-3 text-center"> {# Un div para agrupar y dar un poco de margen #}
             <a href="{{ path('app_discipulo_new') }}" title='Agregar un discipulo nuevo al sistema' class="btn btn-primary btn-lg rounded-lg">
                 <i class="fa fa-plus-square" style='font-size: 24px;'></i> {# Ajusté el tamaño para que se vea mejor en un botón #}

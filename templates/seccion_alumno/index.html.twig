@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SeccionAlumno index{% endblock %}
+
+{% block body %}
+    <h1>SeccionAlumno index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fecha_creacion</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for seccion_alumno in seccion_alumnos %}
+            <tr>
+                <td>{{ seccion_alumno.id }}</td>
+                <td>{{ seccion_alumno.fechaCreacion ? seccion_alumno.fechaCreacion|date('Y-m-d') : '' }}</td>
+                <td>{{ seccion_alumno.estado }}</td>
+                <td>
+                    <a href="{{ path('app_seccion_alumno_show', {'id': seccion_alumno.id}) }}">show</a>
+                    <a href="{{ path('app_seccion_alumno_edit', {'id': seccion_alumno.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_seccion_alumno_new') }}">Create new</a>
+{% endblock %}

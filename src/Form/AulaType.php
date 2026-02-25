@@ -20,6 +20,7 @@ class AulaType extends AbstractType
     {
         $builder
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Nombre del Aula'])
+            ->add('capacidad', NumberType::class, ['required' => true, 'label' => 'Capacidad del Aula'])
             ->add(
             'estado',
             ChoiceType::class,

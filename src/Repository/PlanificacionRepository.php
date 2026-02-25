@@ -61,4 +61,6 @@ class PlanificacionRepository extends ServiceEntityRepository
         $result = $resultSet->fetchAssociative();
         return $result['total'] ?? 0;
     }
+
+
 }

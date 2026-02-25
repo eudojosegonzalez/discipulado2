@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planificación - Maranatha Discipulado{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            // Definimos las dimensiones deseadas
+            const nuevoAncho = 960;
+            const nuevoAlto = 680;
+
+            // 1. Cambiar el tamaño de la ventana
+            window.resizeTo(nuevoAncho, nuevoAlto);
+
+            // 2. Calcular la posición para centrarla
+            // Restamos el tamaño de la ventana al tamaño de la pantalla y dividimos entre 2
+            const x = (screen.width - nuevoAncho) / 2;
+            const y = (screen.height - nuevoAlto) / 2;
+
+            // 3. Mover la ventana a la posición calculada
+            window.moveTo(x, y);
+        });   
+        
+
+    </script>
+{% endblock %}
+{% block body %}
+
+    <!-- Contenido Principal -->
+    <div id="content-fluid" style="padding:5px !important"> 
+        <h4 class='text-center'>Asociar Discipulos a la Planificación</h4>
+        <div class='row'  style='margin:auto !important'>
+            <div class='col-12 col-md-10 col-lg-10 shadow p-3 mb-5 bg-white rounded' style='margin:auto !important'>
+                Opciones de filtrado y busqueda
+            </div>
+        </div>
+        <p>&nbsp;</p>
+        <div class='row'  style='margin:auto !important'>
+            <div class='col-12 col-md-6 col-lg-6 ' style='margin:auto !important'>
+                <table class="table table-bordered" style="font-size: 10px !important; ">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Cédula</th>
+                            <th>Nombre</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="discipulosAsignadosTableBody">
+                        <tr>
+                            <td>1</td  >
+                            <td>999991</td>
+                            <td>Pedro Perez</td>
+                            <td class='text-center'>Hombre</td>
+                            <td class='text-center'>30</td>
+                            <td class='text-center'>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>2</td  >
+                            <td>888888</td>
+                            <td>Maria Garcia</td>
+                            <td class='text-center'>Mujer</td>
+                            <td class='text-center'>25</td>
+                            <td class='text-center'>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>3</td  >
+                            <td>777777</td>
+                            <td>Carlos Rodriguez</td>
+                            <td class='text-center'>Hombre</td>
+                            <td class='text-center'>35</td>
+                            <td class='text-center'>&nbsp;</td>
+                        </tr>                                                
+                    </tbody>
+                </table>
+            </div>
+            <div class='col-12 col-md-6 col-lg-6 ' style='margin:auto !important'>
+                <table class="table table-bordered" style="font-size: 10px !important; ">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Cédula</th>
+                            <th>Nombre</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="discipulosAsignadosTableBody">
+                        <tr>
+                            <td>1</td  >
+                            <td>999999</td>
+                            <td>Pedro Perez</td>
+                            <td class='text-center'>Hombre</td>
+                            <td class='text-center'>30</td>
+                            <td class='text-center'>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>2</td  >
+                            <td>888888</td>
+                            <td>Maria Garcia</td>
+                            <td class='text-center'>Mujer</td>
+                            <td class='text-center'>25</td>
+                            <td class='text-center'>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>3</td  >
+                            <td>777777</td>
+                            <td>Carlos Rodriguez</td>
+                            <td class='text-center'>Hombre</td>
+                            <td class='text-center'>35</td>
+                            <td class='text-center'>&nbsp;</td>
+                        </tr>                                                
+                    </tbody>
+                </table>
+            </div>            
+
+        </div>
+   </div>
+{% endblock %}
+

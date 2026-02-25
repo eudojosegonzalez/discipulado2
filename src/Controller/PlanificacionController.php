@@ -5,10 +5,11 @@ namespace App\Controller;
 use App\Entity\Planificacion;
 use App\Form\PlanificacionType;
 use App\Repository\PlanificacionRepository;
+use App\Repository\DetallePlanificacionRepository;
 use App\Repository\ClasesRepository;
-
-
+use App\Repository\DiscipuloRepository;
 use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,7 @@ final class PlanificacionController extends AbstractController
         $appLogo=$this->getParameter('appLogo');
 
         $page=$request->query->getInt('page', 1);
-        $limit=$request->query->getInt('limit', 10);
+        $limit=$request->query->getInt('limit', 20);
         
         $searchInput=$request->query->get('searchInput', "");
 
@@ -78,7 +79,9 @@ final class PlanificacionController extends AbstractController
                 'discipulador' => $planificacion->getUsuario()->getNombre(),
                 'estado' => $planificacion->getEstado(),
                 'observacion' => $planificacion->getObservacion(),
-                'discipulosAsignados' => $discipulosAsignados
+                'discipulosAsignados' => $discipulosAsignados,
+                'leccionId' => $planificacion->getLeccion()->getId(),
+                'aulaId' => $planificacion->getAula()->getId()
             ];
             
         }
@@ -122,6 +125,44 @@ final class PlanificacionController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/subir_leccion', name: 'app_planificacion_subir_leccion', methods: ['GET'])]
+    public function subirLeccion(
+        Planificacion $planificacion, // Symfony lo busca automáticamente por el {id} del path
+        Request $request
+    ): Response {
+        $appLogo = $this->getParameter('appLogo');
+
+        // Estos vienen de la URL: ?leccionId=X&aulaId=Y
+        $leccionId = $request->query->get('leccionId');
+        $aulaId = $request->query->get('aulaId');
+
+        return $this->render('planificacion/subir_leccion.html.twig', [
+            'planificacion' => $planificacion,
+            'leccionId' => $leccionId,
+            'aulaId' => $aulaId,
+            'appLogo' => $appLogo
+        ]);
+    }  
+
+    #[Route('/{id}/asociar_discipulos', name: 'app_planificacion_asociar_discipulos', methods: ['GET'])]
+    public function asociarDiscipulos(
+        Planificacion $planificacion, // Symfony lo busca automáticamente por el {id} del path
+        DiscipuloRepository $discipuloRepository,
+        DetallePlanificacionRepository $detallePlanificacionRepository,
+        Request $request
+    ): Response {
+        $appLogo = $this->getParameter('appLogo');
+
+        // buscamos los discipulos no asignados a esta planificacion
+        // buscamos los discipulos asignados a esta planificacion
+        
+
+        return $this->render('planificacion/asociar_discipulos.html.twig', [
+            'planificacion' => $planificacion,
+            'appLogo' => $appLogo
+        ]);
+    }  
+
     #[Route('/{id}', name: 'app_planificacion_show', methods: ['GET'])]
     public function show(Planificacion $planificacion): Response
     {
@@ -162,4 +203,6 @@ final class PlanificacionController extends AbstractController
 
         return $this->redirectToRoute('app_planificacion_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
 }

@@ -27,9 +27,11 @@ final class DiscipuloController extends AbstractController
         $appLogo=$this->getParameter('appLogo');
 
         $page=$request->query->getInt('page', 1);
-        $limit=$request->query->getInt('limit', 20);
+        $limit=$request->query->getInt('limit', 25);
         
         $searchInput=$request->query->get('searchInput', "");
+
+        $Orden=$request->query->get('Orden', "");
 
         // determinamos la cantidad de registros en el sistema
         $registros = $discipuloRepository->findAll();
@@ -39,13 +41,38 @@ final class DiscipuloController extends AbstractController
         $nHombres = $discipuloRepository->countBySexo('1');
         $nMujeres = $discipuloRepository->countBySexo('0');
 
-        if ($searchInput!="") {
-            $registros = $discipuloRepository->searchByNombreOrEmail($searchInput);
+        if (($Orden!="") && ($Orden!="-99")) {
+            $arregloORden = explode("_", $Orden);
+            $campoOrden = $arregloORden[0];
+            $tipoOrden = $arregloORden[1];
         } else {
-            $registros = $discipuloRepository->findBy([], [
-                'apellido' => 'ASC',
-                'nombre' => 'ASC'
-            ]);
+            $campoOrden = "";
+            $tipoOrden = "";
+        }
+
+        $caso=0;
+        if ($searchInput!="") {
+            $caso=1;
+            if (($Orden!="") && ($Orden!="-99")) {
+                $caso=2;
+                $registros = $discipuloRepository->findBy(['nombre'=>$searchInput], [$campoOrden => $tipoOrden]);
+            } else {
+                $caso=3;
+                $registros = $discipuloRepository->findBySearchInput($searchInput);
+            }
+        } else {
+            // no hay criterio de búsqueda, se muestran todos los registros
+            $caso=4;
+            if (($Orden!="") && ($Orden!="-99")) {
+                $caso=5;
+                $registros = $discipuloRepository->findBy([], [$campoOrden => $tipoOrden]);
+            } else {
+                $caso=6;
+                $registros = $discipuloRepository->findBy([], [
+                    'apellido' => 'ASC',
+                    'nombre' => 'ASC'
+                ]);
+            }
         }
 
         $pagination = $paginator->paginate(
@@ -66,7 +93,8 @@ final class DiscipuloController extends AbstractController
             'nDiscipulos' => $nDiscipulos,
             'nHombres' => $nHombres,
             'nMujeres' => $nMujeres,
-            'nBusqueda' => $nBusqueda
+            'nBusqueda' => $nBusqueda,
+            'Orden'=>$Orden
         ]);
     }
 

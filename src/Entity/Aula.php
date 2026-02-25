@@ -19,6 +19,9 @@ class Aula
     #[ORM\Column]
     private ?int $estado = null;
 
+    #[ORM\Column]
+    private ?int $capacidad = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,5 +55,17 @@ class Aula
         {
             // Retorna una propiedad que identifique a la clase, por ejemplo el nombre o título
             return $this->nombre; 
+    }
+
+    public function getCapacidad(): ?int
+    {
+        return $this->capacidad;
+    }
+
+    public function setCapacidad(int $capacidad): static
+    {
+        $this->capacidad = $capacidad;
+
+        return $this;
     }        
 }

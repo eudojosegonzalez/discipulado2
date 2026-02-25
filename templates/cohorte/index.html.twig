@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cohortes - Maranatha Discipulado{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            // Colapsar/Expandir Sidebar
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('active');
+            });
+            
+            // Hacer que los items del sidebar sean activos al hacer clic
+            $('.sidebar-item').on('click', function() {
+                $('.sidebar-item').removeClass('active');
+                $(this).addClass('active');
+            });
+        });   
+        
+    </script>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <button type="button" id="sidebarCollapse" class="btn btn-dark mr-2">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand" href="#">
+           <img src="{{ appLogo }}" alt="Logo" style="height:45px !important">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-user-circle mr-1"></i> Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-cog mr-1"></i> Configuración</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt mr-1"></i> Salir</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+    {% include 'navigation_admin.html.twig' %}
+    <!-- Contenido Principal -->
+    <div id="content" style=" padding:5px !important">    
+        <p>&nbsp;</p>
+        <h1>Cohortes en el Sistema</h1>
+        <p>&nbsp;</p>
+        <div class='row'>
+            <div class='col-12 col-md-8 col-lg-8 mb-0' style='margin:auto !important'>
+                <div class="navigation">
+                    {{ knp_pagination_render(cohortes) }}
+                </div>              
+            </div>
+            <div class='col-12 col-md-4 col-lg-4 text-left mb-0'>
+                <div class="input-group">
+                    <input type="text" class="form-control" id='searchInput' name='searchInput' placeholder="Buscar Nombre" aria-label="Buscar" aria-describedby="basic-addon2" value='{{ searchInput  }}'>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" onclick='javascript:search()'>Buscar</button>
+                    </div>
+                </div>                
+            </div>
+        </div>        
+        <div class="my-3 text-center"> {# Un div para agrupar y dar un poco de margen #}
+            <a href="{{ path('app_cohorte_new') }}" title='Agregar un cohorte nuevo al sistema' class="btn btn-primary btn-lg rounded-lg">
+                <i class="fa fa-plus-square" style='font-size: 24px;'></i> {# Ajusté el tamaño para que se vea mejor en un botón #}
+                Agregar Cohorte
+            </a>
+        </div>         
+        <table class="table table-striped table-bordered" >
+            <thead>
+                <tr class='bg-dark text-white text-center'>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% set i = 1 %}
+            {% for cohorte in cohortes %}
+                <tr>
+                    <td class="text-center">{{ i }}</td>
+                    <td>{{ cohorte.nombre }}</td>
+                    <td class="text-center">{{ cohorte.fechaInicio ? cohorte.fechaInicio|date('d/m/Y') : '' }}</td>
+                    <td class="text-center">{{ cohorte.fechaFin ? cohorte.fechaFin|date('d/m/Y') : '' }}</td>
+                    <td class="text-center">
+                        {% if cohorte.estado == '1' %}
+                            <span class='badge badge-success'>Activo</span>
+                        {% else %}
+                            <span class='badge badge-danger'>Inactivo</span>
+                        {% endif %}                    
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ path('app_cohorte_show', {'id': cohorte.id}) }}"><i class="fa-solid fa-eye"></i></a>
+                        <a href="{{ path('app_cohorte_edit', {'id': cohorte.id}) }}"><i class="fa-solid fa-user-pen"></i></a>
+                    </td>
+                </tr>
+                {% set i = i + 1 %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-danger">No se han encontrado cohortes en el sistema.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
