@@ -62,5 +62,21 @@ class PlanificacionRepository extends ServiceEntityRepository
         return $result['total'] ?? 0;
     }
 
+        function countSeccionesAsignadas(int $planificacionId): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT COUNT(*) as count FROM discipulado2.planificacion
+        WHERE id = :planificacionId';
+        
+        $stmt = $conn->prepare($sql);
+        // Asignamos el valor explícitamente al placeholder
+        $stmt->bindValue('planificacionId', $planificacionId);
+        
+        $resultSet = $stmt->executeQuery();
+        $result = $resultSet->fetchAssociative();
+
+        return (int) $result['count'];
+    }
 
 }

@@ -27,6 +27,7 @@
             // Generamos la URL base usando Twig y reemplazamos el ID falso por el real
             let url = "{{ path('app_planificacion_asociar_discipulos', {'id': 'REPLACE_ID'}) }}";
             url = url.replace('REPLACE_ID', id);
+            console.log (url);
 
             window.open(url, '_blank', 'width=800,height=600');
         }
@@ -41,6 +42,42 @@
 
             window.open(url, '_blank', 'width=800,height=600');
         }
+
+        // esta funcion se usa para notificar a los discipulos
+        function sendNotification(id, leccionId, aulaId) {
+            $.ajax({
+                url: "/send_notification/",
+                method: "POST",
+                data: {
+                    id: id,
+                    leccionId: leccionId,
+                    aulaId: aulaId
+            }}).done(function (res) {
+                paso=25;
+                //console.log (res);
+                var data = JSON.parse(res); 
+                paso=26;               
+                console.log  (data);  
+                paso=27;                                    
+                if (data.valor==1){
+                    paso=30;
+                    cadena="Notificación enviada con éxito a los discipulos asignados a esta planificación";
+                    paso=31;
+                    msgSuccess(cadena);
+                } else if (data.valor==-2) {
+                    paso=50;
+                    cadena="No se pudo encontrar el precio de venta de los foils";
+                    paso=51;
+                    msgError(cadena);
+                } else {
+                    paso=60;
+                    cadena="Ocurrió un error que no pudo ser controlado<br>Inténtelo de nuevo";
+                    paso=61;
+                    msgError(cadena);
+                }
+            });
+
+        }   
     </script>
 {% endblock %}
 
@@ -134,12 +171,13 @@
                         <tr>
                             <th>Id</th>
                             <th>Fecha</th>
+                            <th>Cohorte</th>
                             <th>Lección</th>
                             <th>Aula</th>
                             <th>Discipulador</th>
                             <th>Estado</th>
                             <th>Observacion</th>
-                            <th>Discipulos Asignados</th>
+                            <th>Secciones Asignadas</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -149,6 +187,7 @@
                         <tr>
                             <td class='text-center'>{{ i }}</td>
                             <td class='text-center'>{{ planificacion.fecha ? planificacion.fecha|date('d/m/Y') : '' }}</td>
+                            <td class='text-left'>{{ planificacion.cohorte }}</td>
                             <td class='text-left'>{{ planificacion.leccion }}</td>
                             <td class='text-left'>{{ planificacion.aula }}</td>
                             <td>{{ planificacion.discipulador }}</td>
@@ -162,18 +201,18 @@
                             </td>
                             <td class='text-left'>{{ planificacion.observacion }}</td>
                             <td class='text-center'>
-                                <a href="javascript:verAsignados('{{ planificacion.id }}')">{{ planificacion.discipulosAsignados }}</a>
+                                <a href="javascript:verAsignados('{{ planificacion.id }}')">{{ planificacion.seccionesAsignadas }}</a>
                             </td>
                             <td class='text-center'>
                                 <a href="{{ path('app_planificacion_show', {'id': planificacion.id}) }}"><i class="fa-solid fa-eye"></i></a>
                                 <a href="{{ path('app_planificacion_edit', {'id': planificacion.id}) }}"><i class="fa-solid fa-user-pen"></i></a>
-                                <a href="javascript:upLesson('{{ planificacion.id }}','{{ planificacion.leccionId }}','{{ planificacion.aulaId }}')" title="Subir de lección"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                <a href="javascript:sendNotification('{{ planificacion.id }}','{{ planificacion.leccionId }}','{{ planificacion.aulaId }}')" title="Notificar lección"><i class="fa-solid fa-paper-plane" style="color: #28ba07;"></i></a>
                             </td>
                         </tr>
                         {% set i = i + 1 %}
                     {% else %}
                         <tr>
-                            <td colspan="10" class="text-danger">No se han encontrado planificaciones en el sistema</td>
+                            <td colspan="11" class="text-danger">No se han encontrado planificaciones en el sistema</td>
                         </tr>
                     {% endfor %}
                     </tbody>

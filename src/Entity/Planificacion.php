@@ -35,6 +35,14 @@ class Planificacion
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $observacion = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Cohorte $cohorte = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Seccion $seccion = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,6 +116,30 @@ class Planificacion
     public function setObservacion(?string $observacion): static
     {
         $this->observacion = $observacion;
+
+        return $this;
+    }
+
+    public function getCohorte(): ?Cohorte
+    {
+        return $this->cohorte;
+    }
+
+    public function setCohorte(?Cohorte $cohorte): static
+    {
+        $this->cohorte = $cohorte;
+
+        return $this;
+    }
+
+    public function getSeccion(): ?Seccion
+    {
+        return $this->seccion;
+    }
+
+    public function setSeccion(?Seccion $seccion): static
+    {
+        $this->seccion = $seccion;
 
         return $this;
     }

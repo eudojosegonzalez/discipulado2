@@ -3,12 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Planificacion;
+use App\Entity\DetallePlanificacion;
+use App\Entity\SeccionPlanificacion;
+use App\Repository\ClasesRepository;
+
 use App\Form\PlanificacionType;
 use App\Repository\PlanificacionRepository;
 use App\Repository\DetallePlanificacionRepository;
-use App\Repository\ClasesRepository;
+use App\Repository\SeccionAlumnoRepository;
+use App\Repository\SeccionPlanificacionRepository;
 use App\Repository\DiscipuloRepository;
-use Doctrine\ORM\EntityManagerInterface;
+
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 
 #[IsGranted("ROLE_ADMIN")]
@@ -59,7 +67,7 @@ final class PlanificacionController extends AbstractController
         // se cunenta la cantidad de discipulos asignados a cada planificacion
         $arregloPlanificaciones = [];
         foreach ($pagination as $planificacion) {
-            $discipulosAsignados = $planificacionRepository->countDiscipulosAsignados($planificacion->getId());
+            $seccionesAsignadas = $planificacionRepository->countSeccionesAsignadas($planificacion->getId());
             $arregloPlanificaciones[] = [
                 /*
                 <th>Id</th>
@@ -74,12 +82,13 @@ final class PlanificacionController extends AbstractController
                 */
                 'id' => $planificacion->getId(),
                 'fecha' => $planificacion->getFecha(),
+                'cohorte' => $planificacion->getCohorte()->getNombre(),
                 'leccion' => $planificacion->getLeccion()->getTitulo(),
                 'aula' => $planificacion->getAula()->getNombre(),    
                 'discipulador' => $planificacion->getUsuario()->getNombre(),
                 'estado' => $planificacion->getEstado(),
                 'observacion' => $planificacion->getObservacion(),
-                'discipulosAsignados' => $discipulosAsignados,
+                'seccionesAsignadas' => $seccionesAsignadas,
                 'leccionId' => $planificacion->getLeccion()->getId(),
                 'aulaId' => $planificacion->getAula()->getId()
             ];
@@ -101,6 +110,28 @@ final class PlanificacionController extends AbstractController
             'lecciones' => $lecciones
         ]);
     }
+
+    /**
+     * Esta función simula el envío de notificaciones a los discípulos asignados a una planificación.
+     * enviar por correo
+     */
+    #[Route('/send_notification/', name: 'app_planificacion_send_notification', methods: ['POST'])]    
+    public function sendNotification(Request $request, PlanificacionRepository $planificacionRepository): Response
+    {
+        $id = $request->request->get('id');
+        $leccionId = $request->request->get('leccionId');
+        $aulaId = $request->request->get('aulaId');
+
+        // debemos crear los mensajes peronalizados en la base de datos
+        // debemos obtener los discipulos asignados a esta planificacion tomnando las secciones involucradas y luego buscar los discipulos asignados a esas secciones
+    
+        // Simulamos el envío de notificaciones
+        // En una aplicación real, aquí se enviarían las notificaciones a los discípulos
+        // Por ahora, solo devolvemos un valor de éxito
+        return new Response(json_encode(['valor' => 1]));
+    }
+
+
 
     #[Route('/new', name: 'app_planificacion_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -149,16 +180,27 @@ final class PlanificacionController extends AbstractController
         Planificacion $planificacion, // Symfony lo busca automáticamente por el {id} del path
         DiscipuloRepository $discipuloRepository,
         DetallePlanificacionRepository $detallePlanificacionRepository,
+        SeccionAlumnoRepository $seccionAlumnoRepository,
+        PlanificacionRepository $planificacionRepository,
         Request $request
     ): Response {
         $appLogo = $this->getParameter('appLogo');
 
-        // buscamos los discipulos no asignados a esta planificacion
-        // buscamos los discipulos asignados a esta planificacion
-        
+       
+        // determinamos la cohorte actual
+        $cohorteActual=$planificacion->getCohorte();
+        // determinamos el id de la cohorte actual
+        $idCohorte=$cohorteActual->getId();
+        // buscamos las secciones no asignadas a ninguna planificacion
+        $seccionesNoAsignadas=$planificacionRepository->searchSeccionesNoAsignadas($idCohorte);
+
+        // buscamos las secciones asignados a esta planificacion
+        $seccionesAsignadas=$planificacionRepository->searchSeccionesAsignadas($idCohorte);
 
         return $this->render('planificacion/asociar_discipulos.html.twig', [
             'planificacion' => $planificacion,
+            'seccionesNoAsignadas' => $seccionesNoAsignadas,
+            'seccionesAsignadas' => $seccionesAsignadas,
             'appLogo' => $appLogo
         ]);
     }  
@@ -203,6 +245,7 @@ final class PlanificacionController extends AbstractController
 
         return $this->redirectToRoute('app_planificacion_index', [], Response::HTTP_SEE_OTHER);
     }
+
 
 
 }

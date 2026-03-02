@@ -40,38 +40,26 @@
                     <thead>
                         <tr>
                             <th>id</th>
-                            <th>Cédula</th>
                             <th>Nombre</th>
-                            <th>Sexo</th>
-                            <th>Edad</th>
+                            <th>Cohorte</th>
+                            <th>Discipulos</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="discipulosAsignadosTableBody">
-                        <tr>
-                            <td>1</td  >
-                            <td>999991</td>
-                            <td>Pedro Perez</td>
-                            <td class='text-center'>Hombre</td>
-                            <td class='text-center'>30</td>
-                            <td class='text-center'>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>2</td  >
-                            <td>888888</td>
-                            <td>Maria Garcia</td>
-                            <td class='text-center'>Mujer</td>
-                            <td class='text-center'>25</td>
-                            <td class='text-center'>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>3</td  >
-                            <td>777777</td>
-                            <td>Carlos Rodriguez</td>
-                            <td class='text-center'>Hombre</td>
-                            <td class='text-center'>35</td>
-                            <td class='text-center'>&nbsp;</td>
-                        </tr>                                                
+                    <tbody id="discipulosNoAsignadosTableBody">
+                        {% for seccion in seccionesNoAsignadas %}
+                            <tr>    
+                                <td>{{ seccion.id }}</td  >
+                                <td>{{ seccion.nombre }}</td>
+                                <td class='text-center'>{{ seccion.cohorte_id }}</td>
+                                <th>0</th>
+                                <td class='text-center'>&nbsp;</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-danger">No hay secciones disponibles para asignar</td>
+                            </tr>
+                        {% endfor %}                                              
                     </tbody>
                 </table>
             </div>
@@ -80,38 +68,26 @@
                     <thead>
                         <tr>
                             <th>id</th>
-                            <th>Cédula</th>
                             <th>Nombre</th>
-                            <th>Sexo</th>
-                            <th>Edad</th>
+                            <th>Cohorte</th>
+                            <th>Discipulos</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="discipulosAsignadosTableBody">
-                        <tr>
-                            <td>1</td  >
-                            <td>999999</td>
-                            <td>Pedro Perez</td>
-                            <td class='text-center'>Hombre</td>
-                            <td class='text-center'>30</td>
-                            <td class='text-center'>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>2</td  >
-                            <td>888888</td>
-                            <td>Maria Garcia</td>
-                            <td class='text-center'>Mujer</td>
-                            <td class='text-center'>25</td>
-                            <td class='text-center'>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>3</td  >
-                            <td>777777</td>
-                            <td>Carlos Rodriguez</td>
-                            <td class='text-center'>Hombre</td>
-                            <td class='text-center'>35</td>
-                            <td class='text-center'>&nbsp;</td>
-                        </tr>                                                
+                        {% for seccion in seccionesAsignadas %}
+                            <tr>    
+                                <td>{{ seccion.id }}</td  >
+                                <td>{{ seccion.nombre }}</td>
+                                <td class='text-center'>{{ seccion.cohorte_id }}</td>
+                                <th>0</th>
+                                <td class='text-center'>&nbsp;</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-danger">No hay secciones asignadas</td>
+                            </tr>
+                        {% endfor %}                                              
                     </tbody>
                 </table>
             </div>            

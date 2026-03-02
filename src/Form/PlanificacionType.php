@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Aula;
 use App\Entity\Clases;
 use App\Entity\Planificacion;
+use App\Entity\Cohorte;
+use App\Entity\Seccion;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -38,6 +40,16 @@ class PlanificacionType extends AbstractType
                 'class' => User::class,
                 'choice_label' => 'Nombre',
                 'label' => 'Discipulador',
+            ])
+            ->add('cohorte', EntityType::class, [
+                'class' => Cohorte::class,
+                'choice_label' => 'nombre',
+                'label' => 'Cohorte',
+            ])
+            ->add('seccion', EntityType::class, [
+                'class' => Seccion::class,
+                'choice_label' => 'nombre',
+                'label' => 'Sección',
             ])
             ->add(
                 'estado',

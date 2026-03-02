@@ -35,7 +35,9 @@ final class SeccionAlumnoController extends AbstractController
         Request $request        
         ): Response
     {
-        $idSeccion=$request->query->getInt('idSeccion', 1);
+        $params=$request->request->all();
+        $idSeccion=intval($params['idSeccion']) ?? 1 ;
+        
         // buscamos los alumnos por seccion
         $registros=$seccionAlumnoRepository->searchAlumnoBySeccion($idSeccion);
 
