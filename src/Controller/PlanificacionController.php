@@ -122,9 +122,11 @@ final class PlanificacionController extends AbstractController
         $leccionId = $request->request->get('leccionId');
         $aulaId = $request->request->get('aulaId');
 
+        /* interfaz de correo */
+
         // debemos crear los mensajes peronalizados en la base de datos
         // debemos obtener los discipulos asignados a esta planificacion tomnando las secciones involucradas y luego buscar los discipulos asignados a esas secciones
-    
+
         // Simulamos el envío de notificaciones
         // En una aplicación real, aquí se enviarían las notificaciones a los discípulos
         // Por ahora, solo devolvemos un valor de éxito
